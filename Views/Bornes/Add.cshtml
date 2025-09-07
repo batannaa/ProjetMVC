@@ -1,0 +1,97 @@
+﻿@model ProjetMVC.ViewModels.BorneCreateVM
+@using ProjetMVC.Enums;
+
+@{
+    ViewData["Title"] = "Ajouter une borne";
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card-add-borne shadow">
+                <div class="card-body-add-borne">
+                    <h2 class="card-title-add-borne text-center">@ViewData["Title"]</h2>
+                    <hr>
+                    <form asp-action="Add" method="post">
+                        <div class="form-row">
+                            <div class="col-md-6 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <select asp-for="TypeConnecteur" class="form-control form-select" asp-items="Html.GetEnumSelectList<TypeConnecteur>()" id="TypeConnecteur">
+                                        <option value="">Sélectionnez un type de connecteur...</option>
+                                    </select>
+                                    <label for="TypeConnecteur">Type de connecteur</label>
+                                    <span asp-validation-for="TypeConnecteur" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <input asp-for="PuissanceKW" class="form-control" placeholder=" " type="number" min="0" step="0.5" id="PuissanceKW">
+                                    <label for="PuissanceKW">Puissance (kW)</label>
+                                    <span asp-validation-for="PuissanceKW" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <p class="adresse-label">Adresse:</p>
+                            </div>
+                        </div>
+                        <div class="form-row Adresse-row">
+                            <div class="col-md-4 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <input asp-for="Adresse.NoCivique" class="form-control" placeholder=" " id="NoCivique">
+                                    <label for="NoCivique">Numéro civique</label>
+                                    <span asp-validation-for="Adresse.NoCivique" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <input asp-for="Adresse.Rue" class="form-control" placeholder=" " id="Rue">
+                                    <label for="Rue">Rue/Boulevard</label>
+                                    <span asp-validation-for="Adresse.Rue" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <input asp-for="Adresse.Ville" class="form-control" placeholder=" " id="Ville">
+                                    <label for="Ville">Ville</label>
+                                    <span asp-validation-for="Adresse.Ville" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <select asp-for="Adresse.Province" class="form-control" asp-items="Html.GetEnumSelectList<ProvincesCanadiennes>()" id="Province">
+                                        <option value="">-- Sélectionnez une province --</option>
+                                    </select>
+                                    <label for="Province">Province</label>
+                                    <span asp-validation-for="Adresse.Province" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-padding">
+                                <div class="form-group form-floating mb-3">
+                                    <input asp-for="Adresse.CodePostal" class="form-control" placeholder=" " id="CodePostal">
+                                    <label for="CodePostal">Code postal</label>
+                                    <span asp-validation-for="Adresse.CodePostal" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="row justify-content-center">
+                                <div class="col-md-5 mx-2">
+                                    <button type="submit" class="btn btn-primary-add-borne btn-block"><i class="fas fa-plus"></i> Ajouter</button>
+                                </div>
+                                <div class="col-md-5 mx-2">
+                                    <a class="btn btn-secondary-add-borne btn-block" asp-controller="Home" asp-action="Index"><i class="fas fa-times"></i> Annuler</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="error-message" data-message="@TempData["ErrorMessage"]" style="display:none;"></div>
+<div id="info-message" data-message="@TempData["AddBorneSuccessMessage"]" style="display:none;"></div>

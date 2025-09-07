@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ProjetMVC.ViewModels.BorneRechercheVM>
+
+@{
+    ViewData["Title"] = "Résultats de la Recherche";
+
+    // Variable pour la gestion de l’affichage de la distance étant donné qu’on ne va pas afficher la distance
+    // si une recherche par adresse n’a pas été effectuée.
+    bool afficherDistance = Model.Any(item => item.Distance < double.MaxValue);
+}
+
+<div class="container">
+    <div class="card-search-results position-relative">
+        <h1 class="card-title-search-results">@ViewData["Title"]</h1>
+
+        @if (Model != null && Model.Any())
+        {
+            <table class="table table-borne">
+                <thead>
+                    <tr>
+                        <th>Borne ID</th>
+                        <th>Type Connecteur</th>
+                        <th>Puissance (KW)</th>
+                        <th>Adresse</th>
+                        @if (afficherDistance)
+                        {
+                            <th>Distance (km)</th>
+                        }
+                        <th>Moyenne des évaluations</th>
+                        <th>Favoris</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Borne.BorneId</td>
+                            <td>@item.TypeConnecteur</td>
+                            <td>@item.PuissanceMinimale kW</td>
+                            <td class="adresse">
+                                    @if (item.Adresse != null)
+                                    {
+                                        <div>
+                                            @item.Adresse.NoCivique @item.Adresse.Rue, @item.Adresse.Ville @item.Adresse.CodePostal
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span>Adresse non disponible</span>
+                                    }
+                                </td>
+                            @if (afficherDistance)
+                            {
+                                <td>
+                                    @if (item.Distance < double.MaxValue)
+                                    {
+                                        @item.Distance.ToString("F2")
+                                    }
+                                    else
+                                    {
+                                        <span>Non calculée</span>
+                                    }
+                                </td>
+                            }
+                            @if (@item.Borne.MoyenneNote.HasValue)
+                            {
+                                <td>@item.Borne.MoyenneNote.Value.ToString("F1")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
+                            <td>
+                                @if (item.RechercheDansFavorisSeulement)
+                                {
+                                    <i class="fas fa-star favorite"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star favorite"></i>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", "Bornes", new { id = item.Borne.BorneId })" class="btn btn-details-search">
+                                    <i class="fas fa-info-circle"></i> Détails
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (ViewData["Message"] != null)
+        {
+            <div class="custom-alert custom-alert-warning">
+                @ViewData["Message"]
+            </div>
+        }
+        else
+        {
+            <div class="custom-alert custom-alert-info">
+                Aucun résultat trouvé.
+            </div>
+        }
+        <div id="pagination" class="pagination-container mt-3"></div>
+        <a href="@Url.Action("RechercherBorne", "Bornes")" class="btn btn-secondary-detail mt-5">
+            <i class="fas fa-arrow-left"></i> Retour à la recherche
+        </a>
+    </div>
+</div>

@@ -1,0 +1,206 @@
+﻿@using ProjetMVC.Enums;
+@using ProjetMVC.ViewModels;
+
+@model ProjetMVC.ViewModels.BorneDetailsViewModel
+
+@{
+    ViewData["Title"] = "Détails Borne";
+}
+
+<div class="container">
+    <div class="card-detail-borne position-relative">
+        @if (Model.EstFavori)
+        {
+            <i class="fas fa-star small-star gold-star" title="Favori"></i>
+        }
+        <div class="card-body-detail-borne">
+            <h1 class="card-title-detail-borne">@ViewData["Title"]</h1>
+            <hr />
+            
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div id="successMessage" style="display: none;">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div id="error-message" data-message="@TempData["ErrorMessage"]" style="display: none;"></div>
+            }
+            
+            <dl class="row">
+                <div class="row-detail">
+                    <dt class="col-sm-4">Identifiant de la Borne</dt>
+                    <dd class="col-sm-8">@Model.Borne.BorneId</dd>
+                </div>
+                <div class="row-detail">
+                    <dt class="col-sm-4">Type de Connecteur</dt>
+                    <dd class="col-sm-8">@Model.Borne.TypeConnecteur</dd>
+                </div>
+                <div class="row-detail">
+                    <dt class="col-sm-4">Puissance (KW)</dt>
+                    <dd class="col-sm-8">@Model.Borne.PuissanceKW</dd>
+                </div>
+                <div class="row-detail">
+                    <dt class="col-sm-4">Adresse</dt>
+                    <dd class="col-sm-8">
+                        @Model.Borne.Adresse.NoCivique @Model.Borne.Adresse.Rue,
+                        @Model.Borne.Adresse.Ville, @ProvinceHelper.GetProvinceName(Model.Borne.Adresse.Province),
+                        @Model.Borne.Adresse.CodePostal
+                    </dd>
+                </div>
+            </dl>
+
+            <div class="container">
+                <h3 class="evaluations-title">Évaluations</h3>
+                <div class="evaluations-summary">
+                    @if (Model.Evaluations != null && Model.Evaluations.Any())
+                    {
+                        var totalEvaluations = Model.Evaluations.Count();
+                        var averageStars = Model.Evaluations.Average(e => e.Note);
+
+                        <p>@totalEvaluations évaluations</p>
+                        <p>
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                if (i <= averageStars)
+                                {
+                                    <i class="fas fa-star filled-star"></i>
+                                }
+                                else if (i - 0.5 <= averageStars)
+                                {
+                                    <i class="fas fa-star-half-alt filled-star"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                            }
+                            @averageStars?.ToString("0.0") sur 5
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="no-evaluations-message">
+                            <p>Aucune évaluation n'a été soumise pour cette borne.</p>
+                        </div>
+                    }
+                </div>
+                
+                <div id="voir-commentaires">
+                    @if (Model.Evaluations != null && Model.Evaluations.Any())
+                    {
+                        @foreach (var evaluation in Model.Evaluations)
+                        {
+                            <div class="evaluation-detail" style="display: none;">
+                                <div class="evaluation-info">
+                                    <div class="info-line">
+                                        <span class="info-label">Ajouté par :</span>
+                                        <span>@($"{evaluation.Utilisateur.FirstName} {evaluation.Utilisateur.LastName}")</span>
+                                    </div>
+                                    <div class="info-line note-line">
+                                        <span class="info-label">Note :</span>
+                                        <span class="stars-info">@evaluation.Note étoiles</span>
+                                        <div class="stars" data-note="@evaluation.Note"></div>
+                                    </div>
+                                    <div class="info-line">
+                                        <span class="info-label">Commentaire :</span> @evaluation.Commentaire<br/>
+                                        <span class="small"><strong>Posté le :</strong> @evaluation.DateEvaluation?.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                                    </div>
+                                </div>
+                                <hr />
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-evaluations-message">
+                            <p>Aucune évaluation n'a été soumise pour cette borne.</p>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Evaluations.Count() > 0)
+                {
+                    <div class="voir-plus">
+                        <a href="#" id="voir-plus-commentaires-link" data-toggle="modal" data-target="#commentsModal">Voir les commentaires</a>
+                    </div>
+                }
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="commentsModal" tabindex="-1" role="dialog" aria-labelledby="commentsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="commentsModalLabel">Tous les commentaires</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            @if (Model.Evaluations != null && Model.Evaluations.Any())
+                            {
+                                @foreach (var evaluation in Model.Evaluations)
+                                {
+                                    <div class="evaluation-detail">
+                                        <div class="evaluation-info">
+                                            <div class="info-line">
+                                                <span class="info-label">Ajouté par :</span>
+                                                <span>@($"{evaluation.Utilisateur.FirstName} {evaluation.Utilisateur.LastName}")</span>
+                                            </div>
+                                            <div class="info-line note-line">
+                                                <span class="info-label">Note :</span>
+                                                <span class="stars-info">@evaluation.Note étoiles</span>
+                                                <span class="stars" data-note="@evaluation.Note"></span>
+                                            </div>
+                                            <div class="info-line">
+                                                <span class="info-label">Commentaire :</span> @evaluation.Commentaire<br/>
+                                                <span class="small"><strong>Posté le :</strong> @evaluation.DateEvaluation?.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="no-evaluations-message">
+                                    <p>Aucune évaluation n'a été soumise pour cette borne.</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer-detail-borne text-center">
+                @if (Model.EstFavori)
+                {
+                    <form method="post" action="@Url.Action("ToggleFavorite", "Bornes", new { id = Model.Borne.BorneId })" class="d-inline">
+                        <button type="submit" class="btn btn-remove-favorite"><i class="fas fa-star-half-alt"></i> Retirer des favoris</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" action="@Url.Action("ToggleFavorite", "Bornes", new { id = Model.Borne.BorneId })" class="d-inline">
+                        <button type="submit" class="btn btn-primary-detail btn-remove-favorite"><i class="fas fa-star"></i> Ajouter aux favoris</button>
+                    </form>
+                }
+                
+                <a class="btn btn-primary-detail" asp-action="CreateEvaluation" asp-route-borneId="@Model.Borne.BorneId">
+                    <i class="fas fa-comment"></i> Ajouter une évaluation
+                </a>
+                <a class="btn btn-primary-detail" asp-action="Disponibilites" asp-route-borneId="@Model.Borne.BorneId">
+                    <i class="fas fa-calendar-alt"></i> Voir les disponibilités
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <a class="btn btn-secondary-detail mx-auto" asp-action="Index">
+            <i class="fas fa-arrow-left"></i> Retour à la Liste
+        </a>
+    </div>
+</div>

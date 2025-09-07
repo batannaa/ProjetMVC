@@ -1,0 +1,31 @@
+﻿@using ProjetMVC.ViewModels;
+@model List<BorneViewModel>
+
+@{
+    ViewData["Title"] = "Trouvez une borne près de chez vous";
+}
+
+<div class="container">
+    <div class="map-header">
+        <h2 class="map-title">@ViewData["Title"]</h2><hr />
+    </div>
+
+
+    <div id="map" class="map-canvas"></div>
+
+    <!-- Conteneur invisible pour stocker les données des bornes -->
+    <div id="borneData" class="map-data" data-bornes='@Html.Raw(Json.Serialize(Model.Select(b => new {
+        latitude = b.Adresse.Latitude,
+        longitude = b.Adresse.Longitude,
+        typeConnecteur = b.TypeConnecteur.ToString(),
+        puissanceKW = b.PuissanceKW,
+        adresse = $"{b.Adresse.NoCivique}, {b.Adresse.Rue}, {b.Adresse.Ville}, {b.Adresse.Province}, {b.Adresse.CodePostal}"
+    })))'></div>
+
+
+    <div class="map-footer">
+        <a href="@(Url.Action("Index", "Home"))" class="btn btn-return">
+            <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@model RegisterVM
+@{
+    ViewData["Title"] = "S'enregistrer";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card-register shadow">
+                <div class="card-body-register">
+                    <h2 class="card-title-register text-center">@ViewData["Title"]</h2>
+                    <hr>
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="FirstName" class="form-control" id="floatingInput" placeholder="Prénom" />
+                            <label for="floatingInput">Prénom</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="LastName" class="form-control" id="floatingInput" placeholder="Nom" />
+                            <label for="floatingInput">Nom</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                            <label for="floatingInput">Courriel</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        @*<div class="form-floating mb-3">
+                            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+                            <label for="floatingPassword">Mot de passe</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="floatingPassword" placeholder="Confirmation Password" />
+                            <label for="floatingPassword">Confirmer le mot de passe</label>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>*@
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Password" onmouseover="showPassword('password')" onmouseout="hidePassword('password')" />
+                            <label for="password">Mot de passe</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Confirmation Password" onmouseover="showPassword('confirmPassword')" onmouseout="hidePassword('confirmPassword')" />
+                            <label for="confirmPassword">Confirmer le mot de passe</label>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary-register">S'inscrire</button>
+                            <a class="btn btn-secondary-register" asp-controller="Home" asp-action="Index">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

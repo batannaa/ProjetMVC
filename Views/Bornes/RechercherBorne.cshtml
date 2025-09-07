@@ -1,0 +1,92 @@
+@using ProjetMVC.Enums;
+@model ProjetMVC.ViewModels.BorneRechercheVM
+
+@{
+    ViewData["Title"] = "Rechercher une Borne";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center">@ViewData["Title"]</h2>
+                    <hr>
+                    <form asp-action="ResultatsRecherche" method="post" class="recherche-form">
+                        <h4 class="text-secondary">Par connecteur</h4>
+                        <div class="form-group form-floating mb-3">
+                                <select asp-for="TypeConnecteur" class="form-control form-select" asp-items="Html.GetEnumSelectList<TypeConnecteur>()" id="TypeConnecteur">
+                                    <option value="">Sélectionnez un type de connecteur...</option>
+                                </select>
+                                <label for="TypeConnecteur">Type de connecteur</label>
+                                <span asp-validation-for="TypeConnecteur" class="text-danger"></span>
+                            </div>
+                        <div class="form-group form-floating puissance-minimale-container">
+                                <input id="puissanceMinimale" name="PuissanceMinimale" type="text" class="form-control" placeholder="Ex.: 7.5 kW" />
+                                <label for="puissanceMinimale" class="form-label">Puissance minimale (kW)</label>
+                                <div class="btn-group">
+                                    <button type="button" id="increasePuissanceBtn" class="btn btn-secondary">+</button>
+                                    <button type="button" id="decreasePuissanceBtn" class="btn btn-secondary">-</button>
+                                <span asp-validation-for="PuissanceMinimale" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <h4 class="text-secondary">Par adresse</h4>
+                        <div class="form-group form-floating">
+                            <input asp-for="Adresse.NoCivique" class="form-control" placeholder="Numéro civique">
+                            <label asp-for="Adresse.NoCivique" class="form-label">Numéro civique</label>
+
+                            <span asp-validation-for="Adresse.NoCivique" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-floating">
+                            <input asp-for="Adresse.Rue" class="form-control" placeholder="Rue">
+                            <label asp-for="Adresse.Rue" class="form-label">Rue</label>
+
+                            <span asp-validation-for="Adresse.Rue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-floating">
+                            <input asp-for="Adresse.Ville" class="form-control" placeholder="Ville">
+                            <label asp-for="Adresse.Ville" class="form-label">Ville</label>
+                            
+                            <span asp-validation-for="Adresse.Ville" class="text-danger"></span>
+                        </div>
+                            <div class="form-group form-floating mb-3">
+                                <select asp-for="Adresse.Province" class="form-control" asp-items="Html.GetEnumSelectList<ProvincesCanadiennes>()" id="Province">
+                                    <option value="">-- Sélectionnez une province --</option>
+                                </select>
+                                <label for="Province">Province</label>
+                                <span asp-validation-for="Adresse.Province" class="text-danger"></span>
+                            </div>
+                        <div class="form-group form-floating">
+                            <input asp-for="Adresse.CodePostal" class="form-control" placeholder="Code postal">
+                            <label asp-for="Adresse.CodePostal" class="form-label">Code postal</label>
+                           
+                            <span asp-validation-for="Adresse.CodePostal" class="text-danger"></span>
+                        </div>
+                        <h4 class="text-secondary">Par évaluation</h4>
+                        <div class="form-group form-floating mb-3 note-minimale-container">
+                                <input id="noteMinimale" name="NoteMinimale" type="text" class="form-control" placeholder="Note minimale" value="1,0" />
+                                <label for="noteMinimale" class="form-label">Note minimale (entre 1 et 5)</label>
+                                <div class="btn-group">
+                                    <button type="button" id="increaseBtn" class="btn btn-secondary">+</button>
+                                    <button type="button" id="decreaseBtn" class="btn btn-secondary">-</button>
+                        </div>
+                        <span asp-validation-for="NoteMinimale" class="text-danger"></span>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="RechercheDansFavorisSeulement" type="checkbox" class="form-check-input" id="RechercherDansFavoris" />
+                            <label for="RechercherDansFavoris" class="form-check-label">Rechercher uniquement dans mes favoris</label>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary mt-4">
+                                <i class="fas fa-search"></i> Rechercher
+                            </button>
+                            <a class="btn btn-secondary-Recherche mt-4" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

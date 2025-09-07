@@ -1,0 +1,89 @@
+﻿@using ProjetMVC.Enums;
+@model List<ProjetMVC.Models.BorneUtilisateur>
+
+@{
+    ViewData["Title"] = "Mes Bornes Favorites";
+}
+<div class="container">
+    <div class="card-favorites-borne position-relative">
+        @if (TempData["successMessage"] != null)
+        {
+            <script>
+                var addBorneFavoriSuccess = true;
+                var addBorneFavoriMsg = "@TempData["successMessage"]";
+                alertAddBorneFavoriMsg(addBorneFavoriMsg);
+                @TempData.Remove("successMessage")
+            </script>
+
+        }
+        else if (TempData["errorMessage"] != null)
+        {
+            <script>
+                var removeBorneFavoriSuccess = true;
+                var removeBorneFavoriMsg = "@TempData["errorMessage"]";
+                alertRemoveBorneFavoriMsg(removeBorneFavoriMsg);
+                @TempData.Remove("errorMessage")
+            </script>
+
+        }
+        else
+        {
+            <script>
+                var addBorneFavoriSuccess = false;
+                var removeBorneFavoriSuccess = false;
+            </script>
+        }
+
+        <h1 class="card-title-favorites-borne">Mes Bornes Favorites</h1>
+
+        @if (!Model.Any())
+        {
+            
+            <div class="no-borne-message">
+                <p>Aucune borne favorite n'a été ajoutée.</p>
+            </div>
+        }
+        else
+        {
+            <div class="favorites-count mt-3">
+                <p>Vous avez actuellement <span class="count">@Model.Count().ToString("D2")</span> borne(s) en favoris :</p>
+            </div>
+            <div class="table-responsive">
+            <table class="table table-borne">
+                <thead>
+                    <tr>
+                        <th>Borne ID</th>
+                        <th>Type de connecteur</th>
+                        <th>Puissance (kW)</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var borne in Model)
+                    {
+                        <tr>
+                            <td>@borne.BorneId</td>
+                            <td>@borne.Borne.TypeConnecteur</td>
+                            <td>@borne.Borne.PuissanceKW kW</td>
+                            <td class="adresse">@borne.Borne.Adresse.NoCivique, @borne.Borne.Adresse.Rue, @borne.Borne.Adresse.Ville, @ProvinceHelper.GetProvinceName(borne.Borne.Adresse.Province), @borne.Borne.Adresse.CodePostal</td>
+                            <td>
+                                <form method="post" action="@Url.Action("ToggleFavorite", "Bornes", new { id = borne.BorneId })">
+                                    <button type="submit" class="btn btn-remove-favorite"><i class="fas fa-star-half-alt"></i> Retirer des favoris</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+            <div id="pagination" class="pagination-container mt-3"></div>
+        }
+
+        <a href="@(Url.Action("Index", "Bornes"))" class="btn btn-secondary-detail mt-5">
+            <i class="fas fa-arrow-left"></i> Liste des bornes
+        </a>
+    </div>
+</div>
+
+
